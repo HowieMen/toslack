@@ -1,17 +1,15 @@
 from typing import Any
 from dataclasses import dataclass, field
 
-from .slack_client import Client
+from .slack_client import SlackClient
 
 @dataclass
-class Message:
+class SlackMessage:
 
-    client: Client
-    blocks: list[dict[str, Any]] = field(default_factory=list)
-    text: str = ''
+    client: SlackClient
 
     def post(self, text: str) -> None:
-        self.client.post(blocks=self.blocks, text=text)
+        self.client.post(text=text)
     
     def upload(self, file_path: str) -> None:
         self.client.upload(file=file_path, filename=file_path)

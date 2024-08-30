@@ -1,8 +1,8 @@
 import os
 import click
 
-from toslack import Message
-from toslack import Client
+from toslack import SlackMessage
+from toslack import SlackClient
 
 @click.group(invoke_without_command=False)
 @click.option('--token', required=False, type=str, default='', help='slack robot token')
@@ -20,16 +20,16 @@ def cli(ctx, token, channel, channel_id):
 @click.argument('arg')
 @click.pass_context
 def post(ctx, arg):
-    client = Client(token=ctx.obj['token'], channel=ctx.obj['channel'])
-    message = Message(client=client)
+    client = SlackClient(token=ctx.obj['token'], channel=ctx.obj['channel'])
+    message = SlackMessage(client=client)
     message.post(text=arg)
 
 @cli.command()
 @click.argument('arg')
 @click.pass_context
 def upload(ctx, arg):    
-    client = Client(token=ctx.obj['token'], channel_id=ctx.obj['channel_id'])
-    message = Message(client=client)
+    client = SlackClient(token=ctx.obj['token'], channel_id=ctx.obj['channel_id'])
+    message = SlackMessage(client=client)
     message.upload(file_path=arg)
 
 if __name__ == '__main__':
