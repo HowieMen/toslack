@@ -10,7 +10,6 @@ class SlackClient:
 
     token: str = ''
     channel: str = ''
-    channel_id: str = ''
 
     def _client(self):
         if self.token == '':
@@ -19,10 +18,16 @@ class SlackClient:
 
     def post(self, text: str=""):
         if self.channel == '':
-            raise TypeError("missing required parameter: slack channel")
-        self._client().chat_postMessage(channel=self.channel, text=text)
+            raise TypeError("missing required parameter: slack channel ID")
+        try:
+            response = self._client().chat_postMessage(channel=self.channel, text=text)
+        except SlackApiError as e:
+           print(f"Got an error: {e.response['error']}") 
 
     def upload(self, file: Union[str, bytes, IOBase, None], filename: Union[str, None]):
-        if self.channel_id == '':
+        if self.channel == '':
             raise TypeError("missing required parameter: slack channel ID")
-        return self._client().files_upload_v2(channel=self.channel_id, file=file, filename=filename)
+        try:
+            return self._client().files_upload_v2(channel=self.channel, file=file, filename=filename)
+        except SlackApiError as e:
+           print(f"Got an error: {e.response['error']}") 
